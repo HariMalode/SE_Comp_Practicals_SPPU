@@ -1,0 +1,84 @@
+class HashTable:
+    def __init__(self, size):         
+        self.size = size
+        self.table = [None] * size
+
+    def _hash_function(self, key):    
+        return key % self.size
+
+    def _get_next_index(self, index, i):   
+        return (index + i) % self.size
+
+    def insert(self, key, value):
+        index = self._hash_function(key)
+        if self.table[index] is None:
+            self.table[index] = (key, value)
+            print(f"\nClient inserted at Position:{index} ")
+        else:
+            i = 1
+            next_index = self._get_next_index(index, i)
+            while self.table[next_index] is not None:
+                i += 1
+                next_index = self._get_next_index(index, i)
+            self.table[next_index] = (key, value)
+            print(f"\nClient inserted at Position:{next_index} ")
+
+    def search_by_name(self, name):
+        comparisons = 0
+        for item in self.table:
+            comparisons += 1
+            if item is not None and item[1] == name:
+                return item[0], comparisons
+        return None, comparisons
+
+    def show_list(self):
+        print("\n")
+        for item in self.table:
+            if item is not None:
+                print(f"Name: {item[1]}, Telephone number: {item[0]}")
+    
+
+def insert_client():
+    key = int(input("\nEnter the telephone number: "))
+    value = input("Enter the name: ")
+    telephone_book.insert(key, value)
+    print("\nClient inserted.")
+
+
+def search_by_name():
+    name = input("\nEnter the name to search: ")
+    number, comparisons = telephone_book.search_by_name(name)
+    if number is not None:
+        print(f"\nTelephone number: {number}")
+        print(f"Comparisons required: {comparisons}")
+    else:
+        print("\nClient not found.")
+        print(f"Comparisons required: {comparisons}")
+
+
+def show_list():
+    telephone_book.show_list()
+
+
+size = int(input("Enter the size of the hash table: "))
+telephone_book = HashTable(size)
+
+while True:
+    print("\n*** MENU ***")
+    print("1. Insert client")
+    print("2. Search by name")
+    print("3. Show list")
+    print("4. Exit")
+    choice = input("\nEnter your choice: ")
+
+    if choice == "1":
+        insert_client()
+    elif choice == "2":
+        search_by_name()
+    elif choice == "3":
+        show_list()
+    elif choice == "4":
+        break
+    else:
+        print("Invalid choice. Please try again.")
+        
